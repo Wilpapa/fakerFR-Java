@@ -1,0 +1,50 @@
+plugins {
+    id 'java'
+}
+
+group 'com.mongodb.fakerFR'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile group: 'com.github.javafaker', name: 'javafaker', version: '0.16'
+    compile 'org.mongodb:mongodb-driver:3.8.2'
+    compile 'org.yaml:snakeyaml:1.14'
+}
+
+def jarPackage(artifactName, artifactVersion) {
+    if (artifactVersion == "" || artifactVersion == null) {
+        artifactVersion = "1.0.0"
+    }
+    return tasks.create("jar${artifactName}", Jar) {
+        baseName = artifactName
+        version = artifactVersion
+        String className = baseName.capitalize()
+
+        from(sourceSets.main.output) {
+            include "**"
+        }
+
+        from {
+            configurations.compile.collect {
+                it.isDirectory() ? it : zipTree(it)
+            }
+        }
+
+        manifest {
+            attributes "Implementation-Title": "$className",
+                    "Implementation-Version": "$version",
+                    "Main-Class": "com/mongodb/demo/$className"
+        }
+    }
+}
+
+artifacts {
+    archives jarPackage("fakerFR", "")
+}
