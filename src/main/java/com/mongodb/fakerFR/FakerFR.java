@@ -66,15 +66,11 @@ public class FakerFR {
 
         // constants
         int batchSize = 300000;
-        int bulkSize = 1000;
 
         // variables
         Faker faker = new Faker(new Locale("fr"));
         int i;
         boolean debug = false;
-
-        // generate bulk op
-        //BulkWriteOperation builder = collection.initializeUnorderedBulkOperation();
 
 
         // loop
@@ -118,12 +114,9 @@ public class FakerFR {
                 System.out.println(String.format("city: %s", people.getAddress().getCity()));
             }
 
-            if (i % bulkSize == 0) {
-                System.out.println("i: " + Integer.toString(i));
-            }
-            // bulk write array
+         
             collection.insertOne(people);
-            // close connection
+         
         }
 
     }
